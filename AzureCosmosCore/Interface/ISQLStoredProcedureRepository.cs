@@ -8,6 +8,7 @@ namespace AzureCosmosCore.Interface
     {
         Task<T> RunStoredProcedureAsync<T>(StoredProcedure sp, params dynamic[] parameters);
         Task<Document> RunStoredProcedureAsync(StoredProcedure sp, params dynamic[] parameters);
+        Task<T> RunStoredProcedureWithExceptionModelAsync<T>(Uri sp, params dynamic[] parameters);
         Task<T> RunStoredProcedureAsync<T>(Uri sp, params dynamic[] parameters);
         Task<Document> RunStoredProcedureAsync(Uri sp, params dynamic[] parameters);
         Task<StoredProcedure> GetStoredProcedureAsync(Uri sp);

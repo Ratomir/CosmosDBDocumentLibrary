@@ -30,7 +30,14 @@ namespace AzureCosmosCore.Repository
         #endregion << Run with StoredProcedure object >>
 
         #region << Run with Uri property >>
+
         public async Task<T> RunStoredProcedureAsync<T>(Uri sp, params dynamic[] parameters)
+        {
+            T document = await Client.ExecuteStoredProcedureAsync<T>(sp, parameters);
+            return document;
+        }
+
+        public async Task<T> RunStoredProcedureWithExceptionModelAsync<T>(Uri sp, params dynamic[] parameters)
         {
             Document document = await Client.ExecuteStoredProcedureAsync<Document>(sp, parameters);
 
