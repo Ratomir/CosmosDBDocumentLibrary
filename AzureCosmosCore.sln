@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureCosmosCore", "AzureCosmosCore\AzureCosmosCore.csproj", "{81EDC342-74FB-4A06-B7CF-95416066F76E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureCosmos.DI_Container", "AzureCosmos.DI_Container\AzureCosmos.DI_Container.csproj", "{4624D53F-56E9-4649-B612-F44FB7548F66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureCosmos.DI_Container", "AzureCosmos.DI_Container\AzureCosmos.DI_Container.csproj", "{4624D53F-56E9-4649-B612-F44FB7548F66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureCosmosCore.xUnitTest", "AzureCosmosCore.xUnitTest\AzureCosmosCore.xUnitTest.csproj", "{1607FF36-216A-4B53-A36B-2BC1C98B0268}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{4624D53F-56E9-4649-B612-F44FB7548F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4624D53F-56E9-4649-B612-F44FB7548F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4624D53F-56E9-4649-B612-F44FB7548F66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1607FF36-216A-4B53-A36B-2BC1C98B0268}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1607FF36-216A-4B53-A36B-2BC1C98B0268}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1607FF36-216A-4B53-A36B-2BC1C98B0268}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1607FF36-216A-4B53-A36B-2BC1C98B0268}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
