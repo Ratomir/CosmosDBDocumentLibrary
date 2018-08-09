@@ -8,46 +8,51 @@ namespace AzureCosmosCore.DI_Container
 {
     public class DIProvider
     {
-        private static ServiceProvider serviceProvider = null;
+        public static ServiceProvider serviceProvider = null;
 
-        public static string JsonFileConfigurationLocation { get; set; } = "appsettings.json";
-        public static string AppDirectory { get; set; } = Directory.GetCurrentDirectory();
+        public string JsonFileConfigurationLocation { get; set; }
+        public string AppDirectory { get; set; }
 
-        public DIProvider(string jsonFileConfigurationLocation)
-        {
-            JsonFileConfigurationLocation = jsonFileConfigurationLocation;
-        }
+        public ServiceCollection Collection { get; set; }
 
-        public DIProvider(string jsonFileConfigurationLocation, string appDirectory)
+        public IConfiguration Config { get; set; }
+
+        public DIProvider(string jsonFileConfigurationLocation, string appDirectory, IConfiguration config = null)
         {
             JsonFileConfigurationLocation = jsonFileConfigurationLocation;
             AppDirectory = appDirectory;
+            Config = config;
+
+            BuildServiceProvider();
         }
 
         public static ServiceProvider GetServiceProvider()
         {
-            if (serviceProvider == null)
+            return serviceProvider;
+        }
+
+        public void BuildServiceProvider()
+        {
+            Collection = new ServiceCollection();
+            Collection.AddTransient<IBaseRepository, BaseDatabaseRepository>();
+            Collection.AddTransient<ISQLCollectionRepository, SQLCollectionRepository>();
+            Collection.AddTransient<ISQLDatabaseRepository, SQLDatabaseRepository>();
+            Collection.AddTransient<ISQLDocumentRepository, SQLDocumentRepository>();
+            Collection.AddTransient<ISQLStoredProcedureRepository, SQLStoredProcedureRepository>();
+            Collection.AddTransient<ISQLTriggerRepository, SQLTriggerRepository>();
+            Collection.AddTransient<ISQLUDFRepository, SQLUDFRepository>();
+
+            if (Config == null)
             {
-                ServiceCollection collection = new ServiceCollection();
-                collection.AddTransient<IBaseRepository, BaseDatabaseRepository>();
-                collection.AddTransient<ISQLCollectionRepository, SQLCollectionRepository>();
-                collection.AddTransient<ISQLDatabaseRepository, SQLDatabaseRepository>();
-                collection.AddTransient<ISQLDocumentRepository, SQLDocumentRepository>();
-                collection.AddTransient<ISQLStoredProcedureRepository, SQLStoredProcedureRepository>();
-                collection.AddTransient<ISQLTriggerRepository, SQLTriggerRepository>();
-                collection.AddTransient<ISQLUDFRepository, SQLUDFRepository>();
-
-                IConfiguration config = new ConfigurationBuilder()
-                    .SetBasePath(AppDirectory)
-                    .AddJsonFile(JsonFileConfigurationLocation, optional: true, reloadOnChange: true)
-                    .Build();
-
-                collection.AddSingleton(config);
-
-                serviceProvider = collection.BuildServiceProvider();
+                Config = new ConfigurationBuilder()
+                .SetBasePath(AppDirectory)
+                .AddJsonFile(JsonFileConfigurationLocation, optional: true, reloadOnChange: true)
+                .Build();
             }
 
-            return serviceProvider;
+            Collection.AddSingleton(Config);
+
+            serviceProvider = Collection.BuildServiceProvider();
         }
 
         public static void SetServiceProvider(ServiceProvider customServiceProvider)
