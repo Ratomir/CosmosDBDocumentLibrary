@@ -15,7 +15,6 @@ namespace AzureCosmosCore.xUnitTest
             DIProvider.JsonFileConfigurationLocation = "appsettings - Copy.json";
             IConfiguration configuration = DIProvider.GetServiceProvider().GetService<IConfiguration>();
             ISQLDocumentRepository _collectionRepository = DIProvider.GetServiceProvider().GetService<ISQLDocumentRepository>();
-
         }
     }
 }

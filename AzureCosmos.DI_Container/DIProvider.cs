@@ -11,10 +11,17 @@ namespace AzureCosmosCore.DI_Container
         private static ServiceProvider serviceProvider = null;
 
         public static string JsonFileConfigurationLocation { get; set; } = "appsettings.json";
+        public static string AppDirectory { get; set; } = Directory.GetCurrentDirectory();
 
         public DIProvider(string jsonFileConfigurationLocation)
         {
             JsonFileConfigurationLocation = jsonFileConfigurationLocation;
+        }
+
+        public DIProvider(string jsonFileConfigurationLocation, string appDirectory)
+        {
+            JsonFileConfigurationLocation = jsonFileConfigurationLocation;
+            AppDirectory = appDirectory;
         }
 
         public static ServiceProvider GetServiceProvider()
@@ -31,8 +38,8 @@ namespace AzureCosmosCore.DI_Container
                 collection.AddTransient<ISQLUDFRepository, SQLUDFRepository>();
 
                 IConfiguration config = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile(JsonFileConfigurationLocation, true, true)
+                    .SetBasePath(AppDirectory)
+                    .AddJsonFile(JsonFileConfigurationLocation, optional: true, reloadOnChange: true)
                     .Build();
 
                 collection.AddSingleton(config);
@@ -41,6 +48,11 @@ namespace AzureCosmosCore.DI_Container
             }
 
             return serviceProvider;
+        }
+
+        public static void SetServiceProvider(ServiceProvider customServiceProvider)
+        {
+            serviceProvider = customServiceProvider;
         }
     }
 }
