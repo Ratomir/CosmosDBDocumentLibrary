@@ -8,7 +8,7 @@ namespace AzureCosmosCore.DI_Container
 {
     public class DIProvider
     {
-        public static ServiceProvider serviceProvider = null;
+        public static ServiceProvider ServiceProvider;
 
         public string JsonFileConfigurationLocation { get; set; }
         public string AppDirectory { get; set; }
@@ -16,6 +16,13 @@ namespace AzureCosmosCore.DI_Container
         public ServiceCollection Collection { get; set; }
 
         public IConfiguration Config { get; set; }
+
+        public DIProvider(IConfiguration config)
+        {
+            Config = config;
+
+            BuildServiceProvider();
+        }
 
         public DIProvider(string jsonFileConfigurationLocation, string appDirectory, IConfiguration config = null)
         {
@@ -26,10 +33,7 @@ namespace AzureCosmosCore.DI_Container
             BuildServiceProvider();
         }
 
-        public static ServiceProvider GetServiceProvider()
-        {
-            return serviceProvider;
-        }
+        public static ServiceProvider GetServiceProvider() => ServiceProvider;
 
         public void BuildServiceProvider()
         {
@@ -52,12 +56,12 @@ namespace AzureCosmosCore.DI_Container
 
             Collection.AddSingleton(Config);
 
-            serviceProvider = Collection.BuildServiceProvider();
+            ServiceProvider = Collection.BuildServiceProvider();
         }
 
         public static void SetServiceProvider(ServiceProvider customServiceProvider)
         {
-            serviceProvider = customServiceProvider;
+            ServiceProvider = customServiceProvider;
         }
     }
 }
