@@ -4,12 +4,13 @@ using Microsoft.Extensions.Configuration;
 using AzureCosmosCore.Interface;
 using System;
 using System.Threading.Tasks;
+using AzureCosmosCore.Model;
 
 namespace AzureCosmosCore.Repository
 {
     public class SQLUDFRepository : BaseDatabaseRepository, ISQLUDFRepository
     {
-        public SQLUDFRepository(IConfiguration configuration) : base(configuration)
+        public SQLUDFRepository(IConfiguration configuration, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null) : base(configuration, externalMasterKeyEndpointUrl)
         {
         }
 

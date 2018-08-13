@@ -1,10 +1,11 @@
 ﻿using AzureCosmosCore.Interface;
+using AzureCosmosCore.Model;
 using AzureCosmosCore.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 
-namespace AzureCosmosCore.DI_Container
+namespace AzureCosmos.DI_Container
 {
     public class DIProvider
     {
@@ -17,10 +18,19 @@ namespace AzureCosmosCore.DI_Container
 
         public IConfiguration Config { get; set; }
 
+        public ExternalMasterKeyEndpointUrlModel ExternalMasterKeyEndopointUrlModel { get; set; }
+
         public DIProvider(IConfiguration config)
         {
             Config = config;
 
+            BuildServiceProvider();
+        }
+
+        public DIProvider(IConfiguration config, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl)
+        {
+            Config = config;
+            ExternalMasterKeyEndopointUrlModel = externalMasterKeyEndpointUrl;
             BuildServiceProvider();
         }
 
@@ -29,6 +39,16 @@ namespace AzureCosmosCore.DI_Container
             JsonFileConfigurationLocation = jsonFileConfigurationLocation;
             AppDirectory = appDirectory;
             Config = config;
+
+            BuildServiceProvider();
+        }
+
+        public DIProvider(string jsonFileConfigurationLocation, string appDirectory, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl, IConfiguration config = null)
+        {
+            JsonFileConfigurationLocation = jsonFileConfigurationLocation;
+            AppDirectory = appDirectory;
+            Config = config;
+            ExternalMasterKeyEndopointUrlModel = externalMasterKeyEndpointUrl;
 
             BuildServiceProvider();
         }
@@ -52,6 +72,11 @@ namespace AzureCosmosCore.DI_Container
                 .SetBasePath(AppDirectory)
                 .AddJsonFile(JsonFileConfigurationLocation, optional: true, reloadOnChange: true)
                 .Build();
+            }
+
+            if (ExternalMasterKeyEndopointUrlModel != null)
+            {
+                Collection.AddSingleton(ExternalMasterKeyEndopointUrlModel);
             }
 
             Collection.AddSingleton(Config);

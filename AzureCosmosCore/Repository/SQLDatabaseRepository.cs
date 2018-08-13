@@ -5,12 +5,13 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using AzureCosmosCore.Interface;
 using Microsoft.Extensions.Configuration;
+using AzureCosmosCore.Model;
 
 namespace AzureCosmosCore.Repository
 {
     public class SQLDatabaseRepository : BaseDatabaseRepository, ISQLDatabaseRepository
     {
-        public SQLDatabaseRepository(IConfiguration configuration) : base(configuration)
+        public SQLDatabaseRepository(IConfiguration configuration, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null) : base(configuration, externalMasterKeyEndpointUrl)
         {
         }
 

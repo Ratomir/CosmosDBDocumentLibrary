@@ -1,4 +1,5 @@
 ﻿using AzureCosmosCore.Interface;
+using AzureCosmosCore.Model;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
@@ -11,7 +12,7 @@ namespace AzureCosmosCore.Repository
 {
     public class SQLCollectionRepository : BaseDatabaseRepository, ISQLCollectionRepository
     {
-        public SQLCollectionRepository(IConfiguration configuration) : base(configuration)
+        public SQLCollectionRepository(IConfiguration configuration, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null) : base(configuration, externalMasterKeyEndpointUrl)
         {
         }
 

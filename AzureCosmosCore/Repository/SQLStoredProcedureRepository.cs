@@ -5,12 +5,13 @@ using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using AzureCosmosCore.ExceptionCore;
+using AzureCosmosCore.Model;
 
 namespace AzureCosmosCore.Repository
 {
     public class SQLStoredProcedureRepository : BaseDatabaseRepository, ISQLStoredProcedureRepository
     {
-        public SQLStoredProcedureRepository(IConfiguration configuration) : base(configuration)
+        public SQLStoredProcedureRepository(IConfiguration configuration, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null) : base(configuration, externalMasterKeyEndpointUrl)
         {
         }
 

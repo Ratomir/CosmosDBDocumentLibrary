@@ -7,12 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AzureCosmosCore.Model;
 
 namespace AzureCosmosCore.Repository
 {
     public class SQLDocumentRepository : BaseDatabaseRepository, ISQLDocumentRepository
     {
-        public SQLDocumentRepository(IConfiguration configuration):base(configuration)
+        public SQLDocumentRepository(IConfiguration configuration, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null) : base(configuration, externalMasterKeyEndpointUrl)
         {
         }
 

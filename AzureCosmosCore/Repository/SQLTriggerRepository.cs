@@ -3,12 +3,13 @@ using Microsoft.Extensions.Configuration;
 using AzureCosmosCore.Interface;
 using System;
 using System.Threading.Tasks;
+using AzureCosmosCore.Model;
 
 namespace AzureCosmosCore.Repository
 {
     public class SQLTriggerRepository : BaseDatabaseRepository, ISQLTriggerRepository
     {
-        public SQLTriggerRepository(IConfiguration configuration) : base(configuration)
+        public SQLTriggerRepository(IConfiguration configuration, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null) : base(configuration, externalMasterKeyEndpointUrl)
         {
         }
 
