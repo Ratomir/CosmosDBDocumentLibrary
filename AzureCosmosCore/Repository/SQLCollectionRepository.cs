@@ -18,7 +18,7 @@ namespace AzureCosmosCore.Repository
 
         public bool CheckIfCollectionExistAsync(string databaseName, string collectionId) => GetDocumentCollection(databaseName, collectionId) != null;
 
-        public async Task<DocumentCollection> CreateCollection(string databaseName, string collectionId, RequestOptions requestOptions = null)
+        public async Task<DocumentCollection> CreateCollectionIfNotExistsAsync(string databaseName, string collectionId, RequestOptions requestOptions = null)
         {
             Database database = GetDatabaseQuery(databaseName);
 
@@ -28,6 +28,20 @@ namespace AzureCosmosCore.Repository
             };
 
             DocumentCollection documentCollection = await Client.CreateDocumentCollectionIfNotExistsAsync(database.SelfLink, collection, requestOptions );
+
+            return documentCollection;
+        }
+
+        public async Task<DocumentCollection> CreateCollectionAsync(string databaseName, string collectionId, RequestOptions requestOptions = null)
+        {
+            Database database = GetDatabaseQuery(databaseName);
+
+            DocumentCollection collection = new DocumentCollection()
+            {
+                Id = collectionId
+            };
+
+            DocumentCollection documentCollection = await Client.CreateDocumentCollectionAsync(database.SelfLink, collection, requestOptions);
 
             return documentCollection;
         }
