@@ -14,5 +14,6 @@ namespace AzureCosmosCore.Interface
         bool CheckIfCollectionExistAsync(string databaseName, string collectionId);
         DocumentCollection GetDocumentCollection(string databaseName, string collectionId);
         Task<bool> DropCollectionDocument(string databaseName, string collectionId);
+        Task<bool> ChangeDatabaseTroughput(int newTroughput);
     }
 }

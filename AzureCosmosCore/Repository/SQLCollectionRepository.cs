@@ -1,19 +1,23 @@
 ﻿using AzureCosmosCore.Interface;
 using AzureCosmosCore.Model;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AzureCosmosCore.Repository
 {
     public class SQLCollectionRepository : BaseDatabaseRepository, ISQLCollectionRepository
     {
+        public readonly IConfiguration _configuration;
         public SQLCollectionRepository(IConfiguration configuration, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null) : base(configuration, externalMasterKeyEndpointUrl)
         {
+            _configuration = configuration;
         }
 
         public bool CheckIfCollectionExistAsync(string databaseName, string collectionId) => GetDocumentCollection(databaseName, collectionId) != null;
@@ -89,6 +93,15 @@ namespace AzureCosmosCore.Repository
             Database database = GetDatabaseQuery(databaseName);
 
             return Client.CreateDocumentCollectionQuery(database.CollectionsLink).ToList();
+        }
+
+        public async Task<bool> ChangeDatabaseTroughput(int newTroughput)
+        {
+            CosmosDatabase cosmosDatabase = CosmosClient.Databases[_configuration.GetSection("database").Value];
+            CosmosContainer container = cosmosDatabase.Containers["sn-coll"];
+            await container.ReplaceProvisionedThroughputAsync(1000);
+
+            return await container.ReadProvisionedThroughputAsync() == newTroughput;
         }
     }
 }

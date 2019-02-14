@@ -5,20 +5,24 @@ using AzureCosmosCore.Interface;
 using System;
 using System.Linq;
 using AzureCosmosCore.Model;
+using Microsoft.Azure.Cosmos;
+using System.Security;
+using System.Net;
 
 namespace AzureCosmosCore.Repository
 {
     public class BaseDatabaseRepository : IBaseRepository
     {
         public DocumentClient Client { get; set; }
-        private FeedOptions defaultOptions = new FeedOptions { EnableCrossPartitionQuery = true };
         public string EndPoint { get; set; }
         public string MasterKey { get; set; }
 
         public Uri UriCosmosDB { get; set; }
-        public FeedOptions DefaultOptions { get => defaultOptions; set => defaultOptions = value; }
+        public FeedOptions DefaultOptions { get; set; } = new FeedOptions { EnableCrossPartitionQuery = true };
 
-        public BaseDatabaseRepository(IConfiguration configruation, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null)
+        public CosmosClient CosmosClient { get; set; }
+
+        public BaseDatabaseRepository(IConfiguration configuration, ExternalMasterKeyEndpointUrlModel externalMasterKeyEndpointUrl = null)
         {
             string endpointUrl = "endpointUrl";
             string masterKey = "masterKey";
@@ -29,8 +33,8 @@ namespace AzureCosmosCore.Repository
                 masterKey = externalMasterKeyEndpointUrl.ExternalMasterKeyPath;
             }
 
-            EndPoint = configruation.GetSection(endpointUrl).Value;
-            MasterKey = configruation.GetSection(masterKey).Value;
+            EndPoint = configuration.GetSection(endpointUrl).Value;
+            MasterKey = configuration.GetSection(masterKey).Value;
 
             UriCosmosDB = new Uri(EndPoint);
             ConnectionPolicy connectionPolicy = new ConnectionPolicy();
@@ -38,7 +42,10 @@ namespace AzureCosmosCore.Repository
             connectionPolicy.PreferredLocations.Add(LocationNames.NorthEurope);
             connectionPolicy.PreferredLocations.Add(LocationNames.FranceCentral);
 
-            Client = new DocumentClient(UriCosmosDB, MasterKey, connectionPolicy, ConsistencyLevel.Session);
+
+            SecureString theSecureString = new NetworkCredential("", MasterKey).SecurePassword;
+            Client = new DocumentClient(UriCosmosDB, theSecureString, connectionPolicy, Microsoft.Azure.Documents.ConsistencyLevel.Session);
+            CosmosClient = new CosmosClient(EndPoint, MasterKey);
         }
 
         public Database GetDatabaseQuery(string databaseName)

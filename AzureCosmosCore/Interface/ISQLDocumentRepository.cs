@@ -18,7 +18,9 @@ namespace AzureCosmosCore.Interface
         Task<Document> InsertDocument(string databaseId, string collectionId, object document, RequestOptions requestOptions = null);
         Task<Document> InsertDocument(Uri collectionLink, object document, RequestOptions requestOptions = null);
         Task<bool> DeleteDocument(string databaseId, string collectionId, string id);
+        Task<bool> DeleteDocument(Uri documentLink);
 
         Task<T> UpdateDocument<T>(Uri documentLink, object document, RequestOptions requestOptions = null) where T : class;
+        Task DeleteDocumentByCondition(string databaseId, string collectionId, SqlQuerySpec query);
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AzureCosmosCore.Model;
+using System.Net;
 
 namespace AzureCosmosCore.Repository
 {
@@ -19,9 +20,14 @@ namespace AzureCosmosCore.Repository
 
         public async Task<bool> DeleteDocument(string databaseId, string collectionId, string id)
         {
-            await Client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId, collectionId, id));
-            Document document = await ReadDocumentByIdAsync<Document>(id, UriFactory.CreateDocumentCollectionUri(databaseId, collectionId));
-            return document == null;
+            ResourceResponse<Document> response = await Client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(databaseId, collectionId, id));
+            return response.StatusCode == HttpStatusCode.OK;
+        }
+
+        public async Task<bool> DeleteDocument(Uri documentLink)
+        {
+            ResourceResponse<Document> response = await Client.DeleteDocumentAsync(documentLink);
+            return response.StatusCode == HttpStatusCode.OK;
         }
 
         public async Task<Document> InsertDocument(string databaseId, string collectionId, object document, RequestOptions requestOptions = null)
@@ -79,6 +85,17 @@ namespace AzureCosmosCore.Repository
         {
             List<T> document = await Task.Run(() => Client.CreateDocumentQuery<T>(collectionUri, query, DefaultOptions).ToList());
             return document;
+        }
+
+        public async Task DeleteDocumentByCondition(string databaseId, string collectionId, SqlQuerySpec query)
+        {
+            List<Document> lstDocuments = await ReadAllDocuments<Document>(UriFactory.CreateDocumentCollectionUri(databaseId, collectionId), query);
+
+            ParallelLoopResult result = Parallel.ForEach(lstDocuments, async (document) => {
+                bool deleted = await DeleteDocument(databaseId, collectionId, document.Id);
+            });
+
+            while (!result.IsCompleted) ;
         }
     }
 }
