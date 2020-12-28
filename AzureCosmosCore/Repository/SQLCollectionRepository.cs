@@ -1,6 +1,5 @@
 ﻿using AzureCosmosCore.Interface;
 using AzureCosmosCore.Model;
-using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
@@ -97,11 +96,11 @@ namespace AzureCosmosCore.Repository
 
         public async Task<bool> ChangeDatabaseTroughput(int newTroughput)
         {
-            CosmosDatabase cosmosDatabase = CosmosClient.Databases[_configuration.GetSection("database").Value];
-            CosmosContainer container = cosmosDatabase.Containers["sn-coll"];
-            await container.ReplaceProvisionedThroughputAsync(1000);
+            Microsoft.Azure.Cosmos.Database cosmosDatabase = CosmosClient.GetDatabase(_configuration.GetSection("database").Value);
+            Microsoft.Azure.Cosmos.Container container = cosmosDatabase.GetContainer("sn-coll");
+            await container.ReplaceThroughputAsync(1000);
 
-            return await container.ReadProvisionedThroughputAsync() == newTroughput;
+            return await container.ReadThroughputAsync() == newTroughput;
         }
     }
 }

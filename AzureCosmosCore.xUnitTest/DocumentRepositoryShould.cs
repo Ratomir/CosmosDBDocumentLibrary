@@ -17,7 +17,7 @@ namespace AzureCosmosCore.xUnitTest
         [Fact]
         public async Task DeleteDocumentByQuery()
         {
-            DIProvider provider = new DIProvider("appsettings - Copy.json", Directory.GetCurrentDirectory());
+            DIProvider provider = new DIProvider("appsettings.json", Directory.GetCurrentDirectory());
             ISQLDocumentRepository _documentRepository = DIProvider.GetServiceProvider().GetService<ISQLDocumentRepository>();
 
             SqlQuerySpec query = new SqlQuerySpec()
@@ -32,6 +32,23 @@ namespace AzureCosmosCore.xUnitTest
             try
             {
                 await _documentRepository.DeleteDocumentByCondition("sn-db", "sn-coll", query);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Fact]
+        public async Task InsertDocument()
+        {
+            DIProvider provider = new DIProvider("appsettings.json", Directory.GetCurrentDirectory());
+            string databaseId = provider.Config["database"];
+            ISQLDocumentRepository _documentRepository = DIProvider.GetServiceProvider().GetService<ISQLDocumentRepository>();
+
+            try
+            {
+                await _documentRepository.InsertDocument(databaseId, "example-1", new { firstName = "Ratomir", lastName = "Vukadin" });
             }
             catch (Exception ex)
             {

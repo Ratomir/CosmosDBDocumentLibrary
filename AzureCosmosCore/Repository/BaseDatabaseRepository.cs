@@ -5,9 +5,9 @@ using AzureCosmosCore.Interface;
 using System;
 using System.Linq;
 using AzureCosmosCore.Model;
-using Microsoft.Azure.Cosmos;
 using System.Security;
 using System.Net;
+using Microsoft.Azure.Cosmos;
 
 namespace AzureCosmosCore.Repository
 {
@@ -48,7 +48,7 @@ namespace AzureCosmosCore.Repository
             CosmosClient = new CosmosClient(EndPoint, MasterKey);
         }
 
-        public Database GetDatabaseQuery(string databaseName)
+        public Microsoft.Azure.Documents.Database GetDatabaseQuery(string databaseName)
         {
             SqlQuerySpec query = new SqlQuerySpec()
             {
